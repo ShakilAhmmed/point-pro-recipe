@@ -54,6 +54,5 @@ class AuthService
                 ->update(['revoked' => true]);
         }
         return $user->createToken(Authentication::TOKEN->value)->accessToken;
-
     }
 }

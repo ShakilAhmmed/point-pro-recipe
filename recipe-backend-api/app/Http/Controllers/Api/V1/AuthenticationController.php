@@ -2,18 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Actions\V1\LoginTokenAction;
-use App\Enums\Authentication;
 use App\Enums\Token;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\LoginFormRequest;
 use App\Http\Resources\V1\UserApiResource;
-use App\Models\User;
 use App\Services\V1\AuthService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthenticationController extends Controller
@@ -62,6 +58,7 @@ class AuthenticationController extends Controller
             ]);
         } catch (Exception $exception) {
             logger()->critical("authentication:refreshToken for {$user->email}->{$exception->getMessage()}");
+            return $this->errorResponse(message: $exception->getMessage(), code: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }
