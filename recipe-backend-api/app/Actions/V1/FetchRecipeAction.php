@@ -21,6 +21,6 @@ class FetchRecipeAction
             ->when($name, fn ($query) => $query->where('name', 'like', "%{$name}%"))
             ->when($cuisine, fn ($query) => $query->where('cuisine_type', 'like', "%{$cuisine}%"))
             ->orderByDesc('created_at')
-            ->paginate();
+            ->paginate(3);
     }
 }

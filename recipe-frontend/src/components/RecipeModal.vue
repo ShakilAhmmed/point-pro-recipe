@@ -11,8 +11,7 @@
             :validation-schema="schema"
             :initial-values="initialValues"
             @submit="onSubmit"
-            v-slot="{ isSubmitting }"
-            class="form"
+            v-slot="{ isSubmitting, setFieldValue, resetForm }"
         >
           <!-- Top row -->
           <div class="form-row">
@@ -30,7 +29,13 @@
 
             <div class="form-group">
               <label for="image-upload">Image Upload</label>
-              <input id="image-upload" type="file" accept="image/*" class="form-input-file" @change="onImageChange"/>
+              <input
+                  id="image-upload"
+                  type="file"
+                  accept="image/*"
+                  class="form-input-file"
+                  @change="(e)=>onImageChange(e, setFieldValue)"
+              />
               <small v-if="fileError" class="err">{{ fileError }}</small>
               <div v-if="imagePreview" class="image-preview">
                 <img :src="imagePreview" alt="Preview"/>
@@ -43,12 +48,7 @@
           <div class="table-container">
             <table class="ingredients-table">
               <thead>
-              <tr>
-                <th>Name</th>
-                <th>Quantity</th>
-                <th>Unit</th>
-                <th></th>
-              </tr>
+              <tr><th>Name</th><th>Quantity</th><th>Unit</th><th></th></tr>
               </thead>
               <tbody>
               <FieldArray name="ingredients" v-slot="{ fields, push, remove }">
@@ -66,7 +66,7 @@
                     <ErrorMessage :name="`ingredients[${i}].unit`" as="small" class="err"/>
                   </td>
                   <td>
-                    <div class="button-td">
+                    <div class="button-td" style="gap:.5rem">
                       <button type="button" class="btn-add" @click="push({ name:'', quantity:'', unit:'' })">+</button>
                       <button v-if="fields.length > 1" type="button" class="btn-remove" @click="remove(i)">−</button>
                     </div>
@@ -82,33 +82,25 @@
           <div class="table-container">
             <table class="instructions-table">
               <thead>
-              <tr>
-                <th style="width:10%;">Step No</th>
-                <th>Description</th>
-                <th style="width:10%;"></th>
-              </tr>
+              <tr><th style="width:10%;">Step No</th><th>Description</th><th style="width:10%;"></th></tr>
               </thead>
               <tbody>
               <FieldArray name="steps" v-slot="{ fields, push, remove, replace }">
                 <tr v-for="(row, i) in fields" :key="row.key">
                   <td class="step-number">{{ i + 1 }}</td>
                   <td>
-                    <Field :name="`steps[${i}].description`" as="textarea" rows="2" class="table-textarea"
-                           placeholder="Describe this step"/>
+                    <Field :name="`steps[${i}].description`" as="textarea" rows="2" class="table-textarea" placeholder="Describe this step"/>
                     <ErrorMessage :name="`steps[${i}].description`" as="small" class="err"/>
                   </td>
                   <td>
-                    <div class="button-td">
-                      <button type="button" class="btn-add"
-                              @click="push({ step_no: fields.length + 1, description: '' })">+
-                      </button>
+                    <div class="button-td" style="gap:.5rem">
+                      <button type="button" class="btn-add" @click="push({ step_no: fields.length + 1, description: '' })">+</button>
                       <button
                           v-if="fields.length > 1"
                           type="button"
                           class="btn-remove"
                           @click="removeStepAndRenumber(i, fields, replace)"
-                      >−
-                      </button>
+                      >−</button>
                     </div>
                   </td>
                 </tr>
@@ -118,7 +110,7 @@
           </div>
 
           <div class="modal-footer">
-            <button type="button" class="btn-cancel" @click="emitClose">Cancel</button>
+            <button type="button" class="btn-cancel" @click="emitClose(resetForm)">Cancel</button>
             <button type="submit" class="btn-save" :disabled="isSubmitting">
               {{ isSubmitting ? 'Saving…' : 'Save Recipe' }}
             </button>
@@ -130,15 +122,13 @@
 </template>
 
 <script setup>
-import { Form, Field, ErrorMessage } from 'vee-validate'
+import {ref, computed} from 'vue'
+import {Form, Field, ErrorMessage, FieldArray} from 'vee-validate'
 import * as yup from 'yup'
 import axiosRequest from '../helpers/axios'
-import { ref, computed } from 'vue'
 
 const props = defineProps({
   modelValue: { type: Boolean, default: false },
-  mode: { type: String, default: 'create' }, // 'create' | 'edit'
-  recipeId: { type: Number, default: null },
   defaults: {
     type: Object,
     default: () => ({
@@ -150,13 +140,10 @@ const props = defineProps({
     }),
   },
 })
-
 const emit = defineEmits(['update:modelValue', 'saved'])
 
 const imagePreview = ref(null)
 const fileError = ref('')
-
-const titleText = computed(() => (props.mode === 'edit' ? 'Edit Recipe' : 'Create New Recipe'))
 
 const schema = yup.object({
   name: yup.string().required('Recipe name is required'),
@@ -178,17 +165,20 @@ const schema = yup.object({
 
 const initialValues = computed(() => structuredClone(props.defaults))
 
-function emitClose() {
+function emitClose(resetForm) {
   emit('update:modelValue', false)
   imagePreview.value = null
   fileError.value = ''
+  if (typeof resetForm === 'function') {
+    resetForm({ values: initialValues.value })
+  }
 }
 
-function handleImageChange(e, setFieldValue) {
+function onImageChange(e, setFieldValue) {
   const file = e.target.files?.[0]
   fileError.value = ''
   if (file) {
-    setFieldValue('image', file)
+    setFieldValue('image', file)        // <-- write to THIS Form’s context
     const reader = new FileReader()
     reader.onload = (ev) => (imagePreview.value = ev.target?.result)
     reader.readAsDataURL(file)
@@ -198,52 +188,37 @@ function handleImageChange(e, setFieldValue) {
   }
 }
 
-function addIngredient(values, setFieldValue) {
-  setFieldValue('ingredients', [...values.ingredients, { name: '', quantity: '', unit: '' }])
-}
-function removeIngredient(index, values, setFieldValue) {
-  if (values.ingredients.length <= 1) return
-  // replace array to ensure reactivity
-  const next = values.ingredients.filter((_, i) => i !== index)
-  setFieldValue('ingredients', next)
+function removeStepAndRenumber(i, fields, replace) {
+  const next = fields
+      .filter((_, idx) => idx !== i)
+      .map((f, idx) => ({ ...f.value, step_no: idx + 1 }))
+  replace(next) // vee-validate will re-render properly
 }
 
-function addStep(values, setFieldValue) {
-  const nextNo = values.steps.length + 1
-  setFieldValue('steps', [...values.steps, { step_no: nextNo, description: '' }])
-}
-function removeStep(index, values, setFieldValue) {
-  if (values.steps.length <= 1) return
-  const next = values.steps.filter((_, i) => i !== index).map((s, i) => ({ ...s, step_no: i + 1 }))
-  setFieldValue('steps', next)
-}
-
-async function onSubmitInternal(values, { setErrors }) {
+async function onSubmit(formValues, { setErrors }) {
   try {
     const form = new FormData()
-    form.append('name', values.name)
-    form.append('cuisine_type', values.cuisine_type)
-    if (values.image) form.append('image', values.image)
+    form.append('name', formValues.name)
+    form.append('cuisine_type', formValues.cuisine_type)
+    if (formValues.image) form.append('image', formValues.image)
 
-    values.ingredients.forEach((ing, i) => {
+    formValues.ingredients.forEach((ing, i) => {
       form.append(`ingredients[${i}][name]`, ing.name)
       form.append(`ingredients[${i}][quantity]`, ing.quantity ?? '')
       form.append(`ingredients[${i}][unit]`, ing.unit ?? '')
     })
-    values.steps.forEach((st, i) => {
+    formValues.steps.forEach((st, i) => {
       form.append(`steps[${i}][step_no]`, st.step_no)
       form.append(`steps[${i}][description]`, st.description)
     })
 
-    if (props.mode === 'edit' && props.recipeId) {
-      form.append('_method', 'PUT') // for Laravel when sending multipart
-      await axiosRequest.post(`/v1/recipes/${props.recipeId}`, form)
-    } else {
-      await axiosRequest.post('/v1/recipes', form)
-    }
+    // IMPORTANT: ensure axiosRequest doesn’t force JSON headers.
+    await axiosRequest.post('/v1/recipes', form, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
 
     emit('saved')
-    emitClose()
+    emit('update:modelValue', false)
   } catch (e) {
     const resp = e?.response
     if (resp?.status === 422) {
@@ -264,7 +239,7 @@ async function onSubmitInternal(values, { setErrors }) {
 <style scoped>
 
 .err {
-  color: #e73d3d;
+  color: #dc2626;
 }
 .button-td {
   display: flex

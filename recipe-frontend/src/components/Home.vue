@@ -48,12 +48,12 @@
     </div>
 
     <div v-if="!loading && pagination.total > pagination.per_page" class="pagination">
-      <button class="btn-secondary" :disabled="!pagination.prev_page_url" @click="goPage(pagination.current_page - 1)">‹
-        Prev
+      <button class="btn-secondary" :disabled="!pagination.prev_page_url" @click="goPage(pagination.current_page - 1)">
+        <i class="pi pi-angle-double-left"></i> Prev
       </button>
       <span class="page-info">Page {{ pagination.current_page }} of {{ pagination.last_page }}</span>
       <button class="btn-secondary" :disabled="!pagination.next_page_url" @click="goPage(pagination.current_page + 1)">
-        Next ›
+        Next <i class="pi pi-angle-double-right"></i>
       </button>
     </div>
 
@@ -69,14 +69,14 @@ import RecipeModal from './RecipeModal.vue'
 
 const showCreate = ref(false)
 const showEdit = ref(false)
-const editingRecipe = ref(null)         // raw recipe from API (selected)
-const editingDefaults = ref(null)       // mapped defaults for modal
+const editingRecipe = ref(null)
+const editingDefaults = ref(null)
 const deletingId = ref(null)
 
 const loading = ref(false)
 const error = ref('')
 const recipes = ref([])
-const fallbackImage = 'https://via.placeholder.com/600x400?text=Recipe'
+const fallbackImage = 'https://orders.goodthymes.ca/assets/img/goodthymes/default-menu-image-placeholder.png'
 
 const pagination = ref({
   total: 0, per_page: 15, current_page: 1, last_page: 1, next_page_url: null, prev_page_url: null,
@@ -108,32 +108,56 @@ async function fetchRecipes() {
       cuisine_type: filters.value.cuisine_type || undefined,
       page: pagination.value.current_page,
     }
-    const res = await axiosRequest.get('/v1/recipes', {params})
-    const payload = res.data?.data
+    const res = await axiosRequest.get('/v1/recipes', { params })
 
-    if (Array.isArray(payload)) {
-      recipes.value = payload
-      pagination.value = {
-        total: payload.length,
-        per_page: payload.length,
-        current_page: 1,
-        last_page: 1,
-        next_page_url: null,
-        prev_page_url: null
-      }
-    } else if (payload?.data && payload?.meta) {
-      recipes.value = payload.data
-      const m = payload.meta, l = payload.links || {}
+    // Prefer the standard Laravel Resource Collection shape
+    // { data: [...], links: {...}, meta: {...} }
+    const root = res.data
+
+    // Case 1: standard collection
+    if (Array.isArray(root?.data) && root?.meta) {
+      recipes.value = root.data
+      const m = root.meta
+      const l = root.links || {}
       pagination.value = {
         total: m.total,
         per_page: m.per_page,
         current_page: m.current_page,
         last_page: m.last_page,
         next_page_url: l.next ?? null,
-        prev_page_url: l.prev ?? null
+        prev_page_url: l.prev ?? null,
+      }
+    }
+        // Case 2: you still wrap collection under an extra "data"
+    // { data: { data: [...], links: {...}, meta: {...} } }
+    else if (root?.data?.data && root?.data?.meta) {
+      recipes.value = root.data.data
+      const m = root.data.meta
+      const l = root.data.links || {}
+      pagination.value = {
+        total: m.total,
+        per_page: m.per_page,
+        current_page: m.current_page,
+        last_page: m.last_page,
+        next_page_url: l.next ?? null,
+        prev_page_url: l.prev ?? null,
+      }
+    }
+    // Case 3: plain array (no pagination)
+    else if (Array.isArray(root)) {
+      recipes.value = root
+      pagination.value = {
+        total: root.length,
+        per_page: root.length,
+        current_page: 1,
+        last_page: 1,
+        next_page_url: null,
+        prev_page_url: null,
       }
     } else {
-      recipes.value = payload ?? []
+      // Fallback
+      recipes.value = []
+      pagination.value = { total: 0, per_page: 15, current_page: 1, last_page: 1, next_page_url: null, prev_page_url: null }
     }
   } catch (e) {
     error.value = e?.response?.data?.message || 'Failed to fetch recipes.'
@@ -181,7 +205,6 @@ async function deleteRecipe(id) {
   try {
     await axiosRequest.delete(`/v1/recipes/${id}`)
   } catch (e) {
-    // rollback if failed
     if (idx >= 0 && backup) recipes.value.splice(idx, 0, backup)
     alert(e?.response?.data?.message || 'Failed to delete')
   } finally {
@@ -236,7 +259,7 @@ onMounted(fetchRecipes)
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1rem;
-  max-width: 1200px;
+  max-width: 50%;
   margin: 0 auto 2rem;
   padding: 0 1rem;
 }
