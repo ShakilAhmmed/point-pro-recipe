@@ -4,12 +4,12 @@ on:
   push:
     branches: [ "**" ]
     paths:
-      - "point-pro-recipe/recipe-backend-api/**"
+      - "recipe-backend-api/**"
       - ".github/workflows/ci.yml"
   pull_request:
     branches: [ "**" ]
     paths:
-      - "point-pro-recipe/recipe-backend-api/**"
+      - "recipe-backend-api/**"
       - ".github/workflows/ci.yml"
   workflow_dispatch:
 
@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: point-pro-recipe/recipe-backend-api
+        working-directory: recipe-backend-api
     steps:
       - uses: actions/checkout@v4
 
@@ -35,8 +35,8 @@ jobs:
         with:
           path: |
             ~/.composer/cache/files
-            point-pro-recipe/recipe-backend-api/vendor
-          key: composer-${{ hashFiles('point-pro-recipe/recipe-backend-api/composer.lock') }}
+            recipe-backend-api/vendor
+          key: composer-${{ hashFiles('recipe-backend-api/composer.lock') }}
           restore-keys: |
             composer-
 
@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: point-pro-recipe/recipe-backend-api
+        working-directory: recipe-backend-api
     env:
       APP_ENV: testing
       APP_KEY: base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
@@ -87,8 +87,8 @@ jobs:
         with:
           path: |
             ~/.composer/cache/files
-            point-pro-recipe/recipe-backend-api/vendor
-          key: composer-${{ hashFiles('point-pro-recipe/recipe-backend-api/composer.lock') }}
+            recipe-backend-api/vendor
+          key: composer-${{ hashFiles('recipe-backend-api/composer.lock') }}
           restore-keys: |
             composer-
 
@@ -123,7 +123,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: laravel-logs
-          path: point-pro-recipe/recipe-backend-api/storage/logs/*.log
+          path: recipe-backend-api/storage/logs/*.log
 
 
   lint:
@@ -131,7 +131,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: point-pro-recipe/recipe-backend-api
+        working-directory: recipe-backend-api
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -147,8 +147,8 @@ jobs:
         with:
           path: |
             ~/.composer/cache/files
-            point-pro-recipe/recipe-backend-api/vendor
-          key: composer-${{ hashFiles('point-pro-recipe/recipe-backend-api/composer.lock') }}
+            recipe-backend-api/vendor
+          key: composer-${{ hashFiles('recipe-backend-api/composer.lock') }}
           restore-keys: |
             composer-
 
