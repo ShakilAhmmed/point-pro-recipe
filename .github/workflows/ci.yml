@@ -97,8 +97,6 @@ jobs:
 
       - name: Prepare app
         run: |
-          cp .env.example .env || true
-          php artisan key:generate --force
           touch /tmp/database.sqlite
           php artisan config:clear
           php artisan cache:clear
