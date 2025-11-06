@@ -29,7 +29,7 @@ class RecipeController extends Controller
                 message: 'Recipes fetched successfully.',
                 code: Response::HTTP_OK);
         } catch (Throwable $exception) {
-            logger()->critical('recipes:fetch -> ' . $exception->getMessage());
+            logger()->critical('recipes:fetch -> '.$exception->getMessage());
 
             return $this->errorResponse('Recipes fetch failed.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -49,7 +49,7 @@ class RecipeController extends Controller
                 code: Response::HTTP_CREATED
             );
         } catch (Throwable $e) {
-            logger()->critical('recipes:store -> ' . $e->getMessage());
+            logger()->critical('recipes:store -> '.$e->getMessage());
 
             return $this->errorResponse('Server error', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -67,11 +67,11 @@ class RecipeController extends Controller
                 code: Response::HTTP_OK
             );
         } catch (AuthorizationException $exception) {
-            logger()->critical('recipes:show -> ' . $exception->getMessage());
+            logger()->critical('recipes:show -> '.$exception->getMessage());
 
             return $this->errorResponse('Unauthorized.', Response::HTTP_UNAUTHORIZED);
         } catch (Throwable $exception) {
-            logger()->critical('recipes:show -> ' . $exception->getMessage());
+            logger()->critical('recipes:show -> '.$exception->getMessage());
 
             return $this->errorResponse('Server error', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -95,11 +95,11 @@ class RecipeController extends Controller
                 code: Response::HTTP_CREATED
             );
         } catch (AuthorizationException $exception) {
-            logger()->critical('recipes:update -> ' . $exception->getMessage());
+            logger()->critical('recipes:update -> '.$exception->getMessage());
 
             return $this->errorResponse('Unauthorized.', Response::HTTP_UNAUTHORIZED);
         } catch (Throwable $e) {
-            logger()->critical('recipes:update -> ' . $e->getMessage());
+            logger()->critical('recipes:update -> '.$e->getMessage());
 
             return $this->errorResponse('Server error', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -119,11 +119,11 @@ class RecipeController extends Controller
                 code: Response::HTTP_OK
             );
         } catch (AuthorizationException $exception) {
-            logger()->critical('recipes:delete -> ' . $exception->getMessage());
+            logger()->critical('recipes:delete -> '.$exception->getMessage());
 
             return $this->errorResponse('Unauthorized.', Response::HTTP_UNAUTHORIZED);
         } catch (Throwable $e) {
-            logger()->critical('recipes:delete -> ' . $e->getMessage());
+            logger()->critical('recipes:delete -> '.$e->getMessage());
 
             return $this->errorResponse('Server error', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
