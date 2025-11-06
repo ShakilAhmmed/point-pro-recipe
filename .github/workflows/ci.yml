@@ -66,6 +66,7 @@ jobs:
       APP_KEY: base64:EkMrU6Sl8ygYmwRrSeWGJbokfEFPPi308T6zvBuYfOA=
       DB_CONNECTION: sqlite
       DB_DATABASE: /tmp/database.sqlite
+      CACHE_STORE: array
       CACHE_DRIVER: array
       QUEUE_CONNECTION: sync
       SESSION_DRIVER: array
