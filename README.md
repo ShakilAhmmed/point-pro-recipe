@@ -22,13 +22,18 @@ cp .env.example .env
 
 ##### Do not use @ in the DB_PASSWORD [ex: "!!2083!!"]
 
-## Start containers
+## Start containers for backend
 
 ```bash
 sudo docker-compose up -d
 ```
+## Start container for frontend 
+```bash
+cd recipe-frontend 
+sudo docker-compose up -d
+```
 
-# Access application container
+## Access application container
 
 ```bash
 sudo docker exec -it recipe-backend bash
