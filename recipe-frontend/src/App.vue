@@ -8,7 +8,6 @@
           </div>
 
           <div class="nav-links desktop">
-            <router-link v-if="authState" to="/home" class="nav-link">Home</router-link>
             <button v-if="authState" class="nav-link btn-danger" @click="logout">Logout</button>
             <router-link v-if="!authState" to="/login" class="nav-link">Login</router-link>
             <router-link v-if="!authState" to="/register" class="nav-link">Register</router-link>
@@ -109,6 +108,18 @@ body {
 .brand-text {
   font-size: 1.5rem;
   font-weight: bold;
+}
+
+.btn-danger {
+  background-color: #ef4444; /* red-500 */
+  color: white;
+  padding: 0.625rem 1.25rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
 }
 
 .nav-links.desktop {

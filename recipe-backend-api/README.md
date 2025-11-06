@@ -28,7 +28,7 @@ cp .env.example .env
 sudo docker-compose up -d
 ```
 
-#Access application container
+## Access application container
 
 ```bash
 sudo docker exec -it recipe-backend bash
@@ -44,6 +44,7 @@ composer install
 
 ```bash
 php artisan key:generate
+php artisan storage:link
 ```
 
 ## Install Passport keys

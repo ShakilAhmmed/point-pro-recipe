@@ -16,10 +16,10 @@ class RecipeFormRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'cuisine_type' => ['required', 'string', 'max:100'],
-            'image' => ['nullable', 'string', 'max:255'],
+            'image' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'ingredients' => ['required', 'array', 'min:1'],
             'ingredients.*.name' => ['required', 'string', 'max:255'],
-            'ingredients.*.quantity' => ['required', 'string', 'max:50'],
+            'ingredients.*.quantity' => ['required', 'integer', 'max:50'],
             'ingredients.*.unit' => ['required', 'string', 'max:50'],
             'steps' => ['required', 'array', 'min:1'],
             'steps.*.step_no' => ['required', 'integer', 'min:1'],

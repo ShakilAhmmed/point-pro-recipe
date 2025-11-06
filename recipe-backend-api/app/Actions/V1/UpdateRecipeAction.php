@@ -34,7 +34,6 @@ class UpdateRecipeAction
                 'unit' => $i['unit'] ?? null,
             ], $fields['ingredients'])
         );
-
         $recipe->steps()->createMany(
             array_map(fn ($s) => [
                 'step_no' => (int) $s['step_no'],

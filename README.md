@@ -22,14 +22,9 @@ cp .env.example .env
 
 ##### Do not use @ in the DB_PASSWORD [ex: "!!2083!!"]
 
-## Start containers for backend
+## Start containers
 
 ```bash
-sudo docker-compose up -d
-```
-## Start container for frontend 
-```bash
-cd recipe-frontend 
 sudo docker-compose up -d
 ```
 
@@ -49,6 +44,7 @@ composer install
 
 ```bash
 php artisan key:generate
+php artisan storage:link
 ```
 
 ## Install Passport keys
@@ -113,5 +109,4 @@ php artisan insights
     - Observability & Monitoring - Integrate OpenTelemetry
     - Add Caching Layer
     - Rate Limiting Strategy
-    - Laravel Pint as PreCommit Hook
 ```
