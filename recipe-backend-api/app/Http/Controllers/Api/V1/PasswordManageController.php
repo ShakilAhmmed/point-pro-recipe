@@ -7,7 +7,6 @@ use App\Actions\V1\SendPasswordResetLinkAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\ForgotPasswordFormRequest;
 use App\Http\Requests\Api\V1\ResetPasswordRequest;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Password;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,6 +27,7 @@ class PasswordManageController extends Controller
             return $this->successResponse(message: 'If the email is registered, a reset link has been sent.', code: Response::HTTP_OK);
         } catch (Throwable $exception) {
             logger()->critical("authentication:reset-link -> {$exception->getMessage()}");
+
             return $this->errorResponse(message: $exception->getMessage(), code: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

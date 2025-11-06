@@ -9,7 +9,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\RecipeFormRequest;
 use App\Http\Resources\V1\RecipeApiResource;
 use App\Models\Recipe;
-use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -31,6 +30,7 @@ class RecipeController extends Controller
                 code: Response::HTTP_OK);
         } catch (Throwable $exception) {
             logger()->critical('recipes:fetch -> '.$exception->getMessage());
+
             return $this->errorResponse('Recipes fetch failed.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -50,6 +50,7 @@ class RecipeController extends Controller
             );
         } catch (Throwable $e) {
             logger()->critical('recipes:store -> '.$e->getMessage());
+
             return $this->errorResponse('Server error', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

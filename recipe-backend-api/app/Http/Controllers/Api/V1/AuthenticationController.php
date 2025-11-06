@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\LoginFormRequest;
 use App\Http\Resources\V1\UserApiResource;
 use App\Services\V1\AuthService;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,18 +19,17 @@ class AuthenticationController extends Controller
         try {
             return AuthService::userWithToken($request->fields());
         } catch (Throwable $exception) {
-            logger()->critical('authentication:login ->' . $exception->getMessage());
+            logger()->critical("authentication:login -> {$exception->getMessage()}");
+
             return $this->errorResponse(message: $exception->getMessage(), code: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }
 
-    /**
-     * @return JsonResponse
-     */
     public function logout(): JsonResponse
     {
         auth()->user()->token()->revoke();
+
         return $this->successResponse(data: [], message: 'Logged out successfully');
     }
 
@@ -52,6 +50,7 @@ class AuthenticationController extends Controller
             ]);
         } catch (Throwable $exception) {
             logger()->critical("authentication:refreshToken for {$user->email}->{$exception->getMessage()}");
+
             return $this->errorResponse(message: $exception->getMessage(), code: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 

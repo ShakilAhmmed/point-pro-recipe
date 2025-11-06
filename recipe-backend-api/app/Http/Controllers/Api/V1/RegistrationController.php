@@ -6,7 +6,6 @@ use App\Actions\V1\RegisterAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\RegisterFormRequest;
 use App\Http\Resources\V1\UserApiResource;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
