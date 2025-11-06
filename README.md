@@ -94,6 +94,22 @@ vendor/bin/pint --test
 sudo docker exec -it recipe-backend bash
 php artisan insights
 ```
+### Application Structure
+```aiignore
+This application follows a modular and action-driven architecture designed for clarity, scalability, and separation of concerns.
+Below is an overview of the core structure inside the app/ directory:
+app/Actions/V1:
+    - All the Actions which are related to Api version 1
+Enums:
+    - All Application Related Constants
+Http/Controllers/Api/V1:
+    - All the Controller Related to Api version 1.
+Http/Requests/Api/V1:
+    - All the Form Requests Related to Api version 1.
+Http/Resources/Api/V1:
+    - All the Api Resources Related to Api version 1.
+```
+
 
 ## Developer Tools
 
