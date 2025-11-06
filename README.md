@@ -1,6 +1,6 @@
-# RECIPE BACKEND API
+# RECIPE Management
 
-API platform for managing **users, authentication, and recipes**.
+Platform for managing **users, authentication, and recipes**.
 
 ---
 
@@ -104,9 +104,23 @@ php artisan insights
     - Symfony Dump Server
     - PHP Insights
 ```
+
+### Frontend Containers
+
+```bash
+cd recipe-frontend
+cp .env.example .env
+sudo docker-compose up -d
+sudo docker exec -it recipe-frontend sh
+npm i
+```
+
 ## TODO
+
 ```bash
     - Observability & Monitoring - Integrate OpenTelemetry
     - Add Caching Layer
     - Rate Limiting Strategy
+    - Structure Frontend Api Consuming with Actions
+    - Laravel Pint Set As PreCommit Hook
 ```
