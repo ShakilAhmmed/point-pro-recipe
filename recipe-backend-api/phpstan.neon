@@ -11,4 +11,5 @@ parameters:
     level: 5
 
     ignoreErrors:
-            - '#Some specific error pattern#'
+        - '#Access to an undefined property#'
+        - '#Call to an undefined method Laravel\\Passport\\Contracts\\ScopeAuthorizable::revoke#'

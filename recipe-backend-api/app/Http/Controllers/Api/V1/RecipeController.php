@@ -29,9 +29,8 @@ class RecipeController extends Controller
             return $this->successResponse(data: RecipeApiResource::collection($recipes),
                 message: 'Recipes fetched successfully.',
                 code: Response::HTTP_OK);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             logger()->critical('recipes:fetch -> '.$exception->getMessage());
-
             return $this->errorResponse('Recipes fetch failed.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -49,9 +48,8 @@ class RecipeController extends Controller
                 message: 'Recipe created successfully.',
                 code: Response::HTTP_CREATED
             );
-        } catch (Exception|Throwable $e) {
+        } catch (Throwable $e) {
             logger()->critical('recipes:store -> '.$e->getMessage());
-
             return $this->errorResponse('Server error', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -71,7 +69,7 @@ class RecipeController extends Controller
             logger()->critical('recipes:show -> '.$exception->getMessage());
 
             return $this->errorResponse('Unauthorized.', Response::HTTP_UNAUTHORIZED);
-        } catch (Exception|Throwable $exception) {
+        } catch (Throwable $exception) {
             logger()->critical('recipes:show -> '.$exception->getMessage());
 
             return $this->errorResponse('Server error', Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -99,7 +97,7 @@ class RecipeController extends Controller
             logger()->critical('recipes:update -> '.$exception->getMessage());
 
             return $this->errorResponse('Unauthorized.', Response::HTTP_UNAUTHORIZED);
-        } catch (Exception|Throwable $e) {
+        } catch (Throwable $e) {
             logger()->critical('recipes:update -> '.$e->getMessage());
 
             return $this->errorResponse('Server error', Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -123,7 +121,7 @@ class RecipeController extends Controller
             logger()->critical('recipes:delete -> '.$exception->getMessage());
 
             return $this->errorResponse('Unauthorized.', Response::HTTP_UNAUTHORIZED);
-        } catch (Exception|Throwable $e) {
+        } catch (Throwable $e) {
             logger()->critical('recipes:delete -> '.$e->getMessage());
 
             return $this->errorResponse('Server error', Response::HTTP_INTERNAL_SERVER_ERROR);

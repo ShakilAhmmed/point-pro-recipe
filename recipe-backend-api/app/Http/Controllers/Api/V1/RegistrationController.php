@@ -9,6 +9,7 @@ use App\Http\Resources\V1\UserApiResource;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class RegistrationController extends Controller
 {
@@ -19,7 +20,7 @@ class RegistrationController extends Controller
             logger()->info('authentication:registration ->'.$user->id);
 
             return $this->successResponse(data: new UserApiResource($user), message: 'User Registration Successful.', code: Response::HTTP_CREATED);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             logger()->critical('authentication:registration ->'.$exception->getMessage());
 
             return $this->errorResponse(message: $exception->getMessage(), code: Response::HTTP_INTERNAL_SERVER_ERROR);

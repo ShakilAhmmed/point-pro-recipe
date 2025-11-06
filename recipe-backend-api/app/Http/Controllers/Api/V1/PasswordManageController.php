@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Password;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class PasswordManageController extends Controller
 {
@@ -25,9 +26,8 @@ class PasswordManageController extends Controller
             }
 
             return $this->successResponse(message: 'If the email is registered, a reset link has been sent.', code: Response::HTTP_OK);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             logger()->critical("authentication:reset-link -> {$exception->getMessage()}");
-
             return $this->errorResponse(message: $exception->getMessage(), code: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -48,7 +48,7 @@ class PasswordManageController extends Controller
             }
 
             return $this->errorResponse(message: __($status), code: Response::HTTP_UNPROCESSABLE_ENTITY);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             logger()->critical("authentication:reset -> {$exception->getMessage()}");
 
             return $this->errorResponse(message: $exception->getMessage(), code: Response::HTTP_INTERNAL_SERVER_ERROR);
