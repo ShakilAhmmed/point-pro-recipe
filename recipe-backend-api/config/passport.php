@@ -42,5 +42,6 @@ return [
     */
 
     'connection' => env('PASSPORT_CONNECTION'),
+    'runs_migrations' => false,
 
 ];

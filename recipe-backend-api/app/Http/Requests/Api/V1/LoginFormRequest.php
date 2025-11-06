@@ -8,16 +8,12 @@ class LoginFormRequest extends FormRequest
 {
     /**
      *  Determine if the user is authorized to make this request.
-     * @return bool
      */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * @return array
-     */
     public function rules(): array
     {
         return [
@@ -26,9 +22,6 @@ class LoginFormRequest extends FormRequest
         ];
     }
 
-    /**
-     * @return array
-     */
     public function fields(): array
     {
         return [

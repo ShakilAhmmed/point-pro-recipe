@@ -16,11 +16,12 @@ class AuthService
     public static function userWithToken(array $fields): JsonResponse
     {
         $user = User::query()->where('email', $fields['email'])->first();
-        if (!$user || !Hash::check($fields['password'], $user->password)) {
+        if (! $user || ! Hash::check($fields['password'], $user->password)) {
             logger()->warning("authentication:login -> failed for {$fields['email']}");
+
             return response()->json([
                 'status' => 'Error',
-                'message' => "Invalid Credentials.",
+                'message' => 'Invalid Credentials.',
                 'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
                 'data' => null,
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -28,6 +29,7 @@ class AuthService
         }
         $token = $user->createToken(Authentication::TOKEN->value)->accessToken;
         logger()->info("authentication:login -> success for {$fields['email']}");
+
         return response()
             ->json([
                 'code' => Response::HTTP_OK,
@@ -35,15 +37,11 @@ class AuthService
                 'token' => [
                     'access_token' => $token,
                     'token_type' => 'bearer',
-                    'expires_in_days' => Token::TOKEN_TTL_DAYS->value
+                    'expires_in_days' => Token::TOKEN_TTL_DAYS->value,
                 ],
             ]);
     }
 
-    /**
-     * @param User $user
-     * @return string
-     */
     public static function refreshToken(User $user): string
     {
         $current = $user->token();
@@ -53,6 +51,7 @@ class AuthService
                 ->where('access_token_id', $current->id)
                 ->update(['revoked' => true]);
         }
+
         return $user->createToken(Authentication::TOKEN->value)->accessToken;
     }
 }

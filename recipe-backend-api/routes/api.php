@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\Api\V1\AuthenticationController;
 use App\Http\Controllers\Api\V1\PasswordManageController;
+use App\Http\Controllers\Api\V1\RecipeController;
 use App\Http\Controllers\Api\V1\RegistrationController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'v1'], function () {
@@ -21,8 +21,6 @@ Route::group(['prefix' => 'v1'], function () {
     });
 
     Route::group(['middleware' => 'auth:api'], function () {
-        Route::get('/user', function (Request $request) {
-            return $request->user();
-        });
+        Route::apiResource('/recipes', RecipeController::class);
     });
 });

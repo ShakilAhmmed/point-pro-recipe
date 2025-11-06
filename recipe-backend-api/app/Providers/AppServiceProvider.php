@@ -3,11 +3,10 @@
 namespace App\Providers;
 
 use App\Enums\Token;
+use Carbon\CarbonInterval;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
-use Carbon\CarbonInterval;
-
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -30,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
         Passport::personalAccessTokensExpireIn(CarbonInterval::months(6));
         ResetPassword::createUrlUsing(function ($user, string $token) {
             $frontend = config('app.frontend_url');
+
             return "{$frontend}/reset-password?token={$token}&email={$user->getEmailForPasswordReset()}";
         });
     }

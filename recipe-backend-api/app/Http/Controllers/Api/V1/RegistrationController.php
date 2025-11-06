@@ -7,18 +7,21 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\RegisterFormRequest;
 use App\Http\Resources\V1\UserApiResource;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class RegistrationController extends Controller
 {
-    public function store(RegisterFormRequest $request, RegisterAction $registerAction)
+    public function store(RegisterFormRequest $request, RegisterAction $registerAction): JsonResponse
     {
         try {
             $user = $registerAction->execute($request->fields());
-            logger()->info('authentication:registration ->' . $user->id);
-            return $this->successResponse(data: new UserApiResource($user), message: "User Registration Successful.", code: Response::HTTP_CREATED);
+            logger()->info('authentication:registration ->'.$user->id);
+
+            return $this->successResponse(data: new UserApiResource($user), message: 'User Registration Successful.', code: Response::HTTP_CREATED);
         } catch (Exception $exception) {
-            logger()->critical('authentication:registration ->' . $exception->getMessage());
+            logger()->critical('authentication:registration ->'.$exception->getMessage());
+
             return $this->errorResponse(message: $exception->getMessage(), code: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

@@ -7,10 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class RegisterAction
 {
-    /**
-     * @param array $data
-     * @return User|Model
-     */
     public function execute(array $data): Model|User
     {
         return User::query()->create($data);

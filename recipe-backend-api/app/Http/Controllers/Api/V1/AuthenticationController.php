@@ -14,39 +14,31 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthenticationController extends Controller
 {
-    /**
-     * @param LoginFormRequest $request
-     * @return JsonResponse
-     */
-    public function login(LoginFormRequest $request)
+    public function login(LoginFormRequest $request): JsonResponse
     {
         try {
             return AuthService::userWithToken($request->fields());
         } catch (Exception $exception) {
-            logger()->critical('authentication:login ->' . $exception->getMessage());
+            logger()->critical('authentication:login ->'.$exception->getMessage());
+
             return $this->errorResponse(message: $exception->getMessage(), code: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }
 
-    /**
-     * @return JsonResponse
-     */
-    public function logout()
+    public function logout(): JsonResponse
     {
         auth()->user()->token()->revoke();
+
         return $this->successResponse(data: [], message: 'Logged out successfully');
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse|void
-     */
-    public function refreshToken(Request $request)
+    public function refreshToken(Request $request): JsonResponse
     {
         $user = auth()->user();
         try {
             logger()->info("authentication:refreshToken -> for {$user->email}");
+
             return response()->json([
                 'code' => Response::HTTP_OK,
                 'data' => new UserApiResource($user),
@@ -58,6 +50,7 @@ class AuthenticationController extends Controller
             ]);
         } catch (Exception $exception) {
             logger()->critical("authentication:refreshToken for {$user->email}->{$exception->getMessage()}");
+
             return $this->errorResponse(message: $exception->getMessage(), code: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 

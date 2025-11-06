@@ -10,12 +10,11 @@ trait ApiAble
     /**
      * Success response  function
      *
-     * @param mixed $data Main data pass.
-     * @param string|null $message Some message.
-     * @param int $code Status code pass.
-     * @return JsonResponse
+     * @param  mixed  $data  Main data pass.
+     * @param  string|null  $message  Some message.
+     * @param  int  $code  Status code pass.
      */
-    protected function successResponse(mixed $data = [], string $message = null, int $code = Response::HTTP_OK): JsonResponse
+    protected function successResponse(mixed $data = [], ?string $message = null, int $code = Response::HTTP_OK): JsonResponse
     {
         return response()->json([
             'status' => 'Success',
@@ -28,9 +27,8 @@ trait ApiAble
     /**
      * Error response  function
      *
-     * @param string $message Some message.
-     * @param int $code Status code pass.
-     * @return JsonResponse
+     * @param  string  $message  Some message.
+     * @param  int  $code  Status code pass.
      */
     protected function errorResponse(string $message, int $code = Response::HTTP_INTERNAL_SERVER_ERROR): JsonResponse
     {
