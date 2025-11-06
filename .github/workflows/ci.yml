@@ -63,7 +63,7 @@ jobs:
         working-directory: recipe-backend-api
     env:
       APP_ENV: testing
-      APP_KEY: base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+      APP_KEY: base64:EkMrU6Sl8ygYmwRrSeWGJbokfEFPPi308T6zvBuYfOA=
       DB_CONNECTION: sqlite
       DB_DATABASE: /tmp/database.sqlite
       CACHE_DRIVER: array
