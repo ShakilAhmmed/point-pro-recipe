@@ -122,13 +122,19 @@ Http/Resources/Api/V1:
 ```
 
 ### Frontend Containers
-
 ```bash
 cd recipe-frontend
 cp .env.example .env
 sudo docker-compose up -d
 sudo docker exec -it recipe-frontend sh
 npm i
+```
+### Frontend Structure
+```bash
+    - Yup for frontend form validation.
+    - Handling form with vee-validate
+    - All the components in src/components
+    - helper and utilities function in src/helpers
 ```
 
 ## TODO

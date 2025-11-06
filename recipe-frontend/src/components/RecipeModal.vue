@@ -178,7 +178,7 @@ function onImageChange(e, setFieldValue) {
   const file = e.target.files?.[0]
   fileError.value = ''
   if (file) {
-    setFieldValue('image', file)        // <-- write to THIS Form’s context
+    setFieldValue('image', file);
     const reader = new FileReader()
     reader.onload = (ev) => (imagePreview.value = ev.target?.result)
     reader.readAsDataURL(file)
@@ -212,7 +212,6 @@ async function onSubmit(formValues, { setErrors }) {
       form.append(`steps[${i}][description]`, st.description)
     })
 
-    // IMPORTANT: ensure axiosRequest doesn’t force JSON headers.
     await axiosRequest.post('/v1/recipes', form, {
       headers: { 'Content-Type': 'multipart/form-data' }
     })

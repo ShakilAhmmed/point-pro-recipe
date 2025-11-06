@@ -64,17 +64,13 @@ const onSubmit = async (values) => {
 
     if (resp.status === 422) {
       const errs = resp.data?.errors || {}
-      // Field-level mapping
       const flattened = Object.fromEntries(
           Object.entries(errs).map(([k, v]) => [k, v?.[0] || 'Invalid value'])
       )
       setErrors(flattened)
-      // Top banner = best backend message
       serverError.value = extractServerMessage(resp)
     } else if (resp.status === 401) {
-      // For auth errors that are not field-specific
       serverError.value = resp.data?.message || 'Invalid credentials'
-      // optionally pin to a specific field too:
       setFieldError('email', serverError.value)
     } else {
       serverError.value = extractServerMessage(resp)

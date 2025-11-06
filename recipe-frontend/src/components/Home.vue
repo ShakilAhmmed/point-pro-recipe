@@ -178,7 +178,6 @@ function openCreate() {
 
 function openEdit(recipe) {
   editingRecipe.value = recipe
-  // Map API shape -> modal defaults
   editingDefaults.value = {
     name: recipe.name ?? '',
     cuisine_type: recipe.cuisine_type ?? '',
