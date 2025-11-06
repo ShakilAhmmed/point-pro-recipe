@@ -108,4 +108,5 @@ php artisan insights
     - Observability & Monitoring - Integrate OpenTelemetry
     - Add Caching Layer
     - Rate Limiting Strategy
+    - Laravel Pint as PreCommit Hook
 ```
