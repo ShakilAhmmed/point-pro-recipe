@@ -8,7 +8,7 @@ Platform for managing **users, authentication, and recipes**.
 
 ```bash
 # Clone the repository
-https://github.com/ShakilAhmmed/point-pro-recipe.git
+git clone https://github.com/ShakilAhmmed/point-pro-recipe.git
 cd recipe-backend-api
 ```
 
