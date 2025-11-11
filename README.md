@@ -50,7 +50,7 @@ php artisan storage:link
 ## Install Passport keys
 
 ```bash
-php artisan passport:install
+php artisan passport:client
 ```
 
 #### Write your PASSPORT_PASSWORD_CLIENT_ID and PASSPORT_PASSWORD_SECRET PORT in .env.
