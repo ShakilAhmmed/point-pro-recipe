@@ -20,7 +20,7 @@ class FetchRecipeAction
             ->when(! $isAdmin, function ($query) use ($user) {
                 $query->where(function ($query) use ($user) {
                     return $query->where('user_id', $user->id)
-                        ->orWhere('visibility', 1);
+                        ->orWhere('visibility', Recipe::PUBLIC_VISIBLE);
                 });
             })
             ->when($name, fn ($query) => $query->where('name', 'like', "%{$name}%"))
