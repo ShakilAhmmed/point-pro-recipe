@@ -14,12 +14,13 @@ class CreateRecipeAction
         $recipe = Recipe::query()->create([
             'user_id' => $userId,
             'name' => $fields['name'],
+            'visibility' => $fields['visibility'] ?? 0,
             'cuisine_type' => $fields['cuisine_type'],
             'image' => $path,
         ]);
 
         $recipe->ingredients()->createMany(
-            array_map(fn ($i) => [
+            array_map(fn($i) => [
                 'name' => $i['name'],
                 'quantity' => $i['quantity'] ?? null,
                 'unit' => $i['unit'] ?? null,
@@ -27,8 +28,8 @@ class CreateRecipeAction
         );
 
         $recipe->steps()->createMany(
-            array_map(fn ($s) => [
-                'step_no' => (int) $s['step_no'],
+            array_map(fn($s) => [
+                'step_no' => (int)$s['step_no'],
                 'description' => $s['description'],
             ], $fields['steps'])
         );

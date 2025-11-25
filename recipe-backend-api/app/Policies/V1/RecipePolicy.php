@@ -21,7 +21,7 @@ class RecipePolicy
      */
     public function view(User $user, Recipe $recipe): bool
     {
-        return $user->isAdmin() || $recipe->user_id === $user->id;
+        return $user->isAdmin() || $recipe->user_id === $user->id || $recipe->isPublic();
     }
 
     /**

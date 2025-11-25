@@ -22,6 +22,7 @@ class RecipeApiResource extends JsonResource
             'image' => $this->image ? Storage::disk('public')->url($this->image) : null,
             'ingredients' => IngredientApiResource::collection($this->whenLoaded('ingredients')),
             'steps' => StepApiResource::collection($this->whenLoaded('steps')),
+            'visibility' => $this->visibility,
             'created_at' => $this->created_at->diffForHumans(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];

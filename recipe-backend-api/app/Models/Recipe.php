@@ -11,6 +11,8 @@ class Recipe extends Model
 {
     use HasFactory;
 
+    const PUBLIC_VISIBLE = 1;
+
     protected $table = 'recipes';
 
     protected $primaryKey = 'id';
@@ -20,6 +22,7 @@ class Recipe extends Model
         'cuisine_type',
         'image',
         'user_id',
+        'visibility'
     ];
 
     public function user(): BelongsTo
@@ -35,5 +38,10 @@ class Recipe extends Model
     public function steps(): HasMany
     {
         return $this->hasMany(RecipeStep::class)->orderBy('step_no');
+    }
+
+    public function isPublic(): bool
+    {
+        return $this->visibility === self::PUBLIC_VISIBLE;
     }
 }

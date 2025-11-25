@@ -32,6 +32,7 @@ class RecipeFormRequest extends FormRequest
         return [
             'name' => $this->input('name'),
             'cuisine_type' => $this->input('cuisine_type'),
+            'visibility' => $this->input('visibility'),
             'image' => $this->input('image'),
             'ingredients' => $this->input('ingredients'),
             'steps' => $this->input('steps'),

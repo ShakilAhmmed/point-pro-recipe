@@ -14,6 +14,7 @@ it('creates recipe with ingredients and steps', function () {
     $payload = [
         'name' => 'Chicken Biryani',
         'cuisine_type' => 'South Asian',
+        'visibility' => 0,
         'ingredients' => [
             ['name' => 'Rice', 'quantity' => '500', 'unit' => 'g'],
             ['name' => 'Chicken', 'quantity' => '1', 'unit' => 'kg'],

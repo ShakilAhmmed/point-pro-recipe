@@ -26,6 +26,15 @@
               <Field id="cuisine-type" name="cuisine_type" type="text" class="form-input" placeholder="e.g., Italian"/>
               <ErrorMessage name="cuisine_type" as="small" class="err"/>
             </div>
+            <div class="form-group">
+              <label for="visibility">Visibility</label>
+              <Field class="form-input" name="visibility" as="select">
+                <option value="">Select value</option>
+                <option value="1">Public</option>
+                <option value="0">Private</option>
+              </Field>
+              <ErrorMessage name="visibility" as="small" class="err"/>
+            </div>
 
             <div class="form-group">
               <label for="image-upload">Image Upload</label>
@@ -48,7 +57,12 @@
           <div class="table-container">
             <table class="ingredients-table">
               <thead>
-              <tr><th>Name</th><th>Quantity</th><th>Unit</th><th></th></tr>
+              <tr>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Unit</th>
+                <th></th>
+              </tr>
               </thead>
               <tbody>
               <FieldArray name="ingredients" v-slot="{ fields, push, remove }">
@@ -82,25 +96,33 @@
           <div class="table-container">
             <table class="instructions-table">
               <thead>
-              <tr><th style="width:10%;">Step No</th><th>Description</th><th style="width:10%;"></th></tr>
+              <tr>
+                <th style="width:10%;">Step No</th>
+                <th>Description</th>
+                <th style="width:10%;"></th>
+              </tr>
               </thead>
               <tbody>
               <FieldArray name="steps" v-slot="{ fields, push, remove, replace }">
                 <tr v-for="(row, i) in fields" :key="row.key">
                   <td class="step-number">{{ i + 1 }}</td>
                   <td>
-                    <Field :name="`steps[${i}].description`" as="textarea" rows="2" class="table-textarea" placeholder="Describe this step"/>
+                    <Field :name="`steps[${i}].description`" as="textarea" rows="2" class="table-textarea"
+                           placeholder="Describe this step"/>
                     <ErrorMessage :name="`steps[${i}].description`" as="small" class="err"/>
                   </td>
                   <td>
                     <div class="button-td" style="gap:.5rem">
-                      <button type="button" class="btn-add" @click="push({ step_no: fields.length + 1, description: '' })">+</button>
+                      <button type="button" class="btn-add"
+                              @click="push({ step_no: fields.length + 1, description: '' })">+
+                      </button>
                       <button
                           v-if="fields.length > 1"
                           type="button"
                           class="btn-remove"
                           @click="removeStepAndRenumber(i, fields, replace)"
-                      >−</button>
+                      >−
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -128,15 +150,16 @@ import * as yup from 'yup'
 import axiosRequest from '../helpers/axios'
 
 const props = defineProps({
-  modelValue: { type: Boolean, default: false },
+  modelValue: {type: Boolean, default: false},
   defaults: {
     type: Object,
     default: () => ({
       name: '',
       cuisine_type: '',
+      visibility: '',
       image: null,
-      ingredients: [{ name: '', quantity: '', unit: '' }],
-      steps: [{ step_no: 1, description: '' }],
+      ingredients: [{name: '', quantity: '', unit: ''}],
+      steps: [{step_no: 1, description: ''}],
     }),
   },
 })
@@ -170,7 +193,7 @@ function emitClose(resetForm) {
   imagePreview.value = null
   fileError.value = ''
   if (typeof resetForm === 'function') {
-    resetForm({ values: initialValues.value })
+    resetForm({values: initialValues.value})
   }
 }
 
@@ -191,15 +214,16 @@ function onImageChange(e, setFieldValue) {
 function removeStepAndRenumber(i, fields, replace) {
   const next = fields
       .filter((_, idx) => idx !== i)
-      .map((f, idx) => ({ ...f.value, step_no: idx + 1 }))
+      .map((f, idx) => ({...f.value, step_no: idx + 1}))
   replace(next) // vee-validate will re-render properly
 }
 
-async function onSubmit(formValues, { setErrors }) {
+async function onSubmit(formValues, {setErrors}) {
   try {
     const form = new FormData()
     form.append('name', formValues.name)
     form.append('cuisine_type', formValues.cuisine_type)
+    form.append('visibility', formValues.visibility ?? 0)
     if (formValues.image) form.append('image', formValues.image)
 
     formValues.ingredients.forEach((ing, i) => {
@@ -213,7 +237,7 @@ async function onSubmit(formValues, { setErrors }) {
     })
 
     await axiosRequest.post('/v1/recipes', form, {
-      headers: { 'Content-Type': 'multipart/form-data' }
+      headers: {'Content-Type': 'multipart/form-data'}
     })
 
     emit('saved')
@@ -227,9 +251,9 @@ async function onSubmit(formValues, { setErrors }) {
       )
       setErrors(mapped)
     } else if (resp?.status === 401) {
-      setErrors({ name: 'Unauthorized. Please login again.' })
+      setErrors({name: 'Unauthorized. Please login again.'})
     } else {
-      setErrors({ name: resp?.data?.message ?? 'Server error' })
+      setErrors({name: resp?.data?.message ?? 'Server error'})
     }
   }
 }
@@ -240,6 +264,7 @@ async function onSubmit(formValues, { setErrors }) {
 .err {
   color: #dc2626;
 }
+
 .button-td {
   display: flex
 }

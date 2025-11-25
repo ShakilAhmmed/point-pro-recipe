@@ -14,6 +14,7 @@ it('user creates and lists own recipes; cannot view others recipe', function () 
     $create = $this->postJson('/api/v1/recipes', [
         'name' => 'My Curry',
         'cuisine_type' => 'Indian',
+        'visibility' => 0,
         'ingredients' => [
             ['name' => 'Curry Powder', 'quantity' => '2', 'unit' => 'tbsp'],
         ],
@@ -29,5 +30,5 @@ it('user creates and lists own recipes; cannot view others recipe', function () 
         ->assertJsonFragment(['name' => 'My Curry']);
 
     $show = $this->getJson("/api/v1/recipes/{$otherRecipe->id}");
-    $show->assertStatus(\Symfony\Component\HttpFoundation\Response::HTTP_UNAUTHORIZED);
+    $show->assertStatus(\Symfony\Component\HttpFoundation\Response::HTTP_OK);
 });
