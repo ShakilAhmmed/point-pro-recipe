@@ -17,14 +17,14 @@ class FetchRecipeAction
         return Recipe::query()
             ->with('user', 'ingredients', 'steps')
             ->withCount(['ingredients', 'steps'])
-            ->when(!$isAdmin, function ($query) use ($user) {
+            ->when(! $isAdmin, function ($query) use ($user) {
                 $query->where(function ($query) use ($user) {
                     return $query->where('user_id', $user->id)
                         ->orWhere('visibility', 1);
                 });
             })
-            ->when($name, fn($query) => $query->where('name', 'like', "%{$name}%"))
-            ->when($cuisine, fn($query) => $query->where('cuisine_type', 'like', "%{$cuisine}%"))
+            ->when($name, fn ($query) => $query->where('name', 'like', "%{$name}%"))
+            ->when($cuisine, fn ($query) => $query->where('cuisine_type', 'like', "%{$cuisine}%"))
             ->orderByDesc('created_at')
             ->paginate(3);
     }

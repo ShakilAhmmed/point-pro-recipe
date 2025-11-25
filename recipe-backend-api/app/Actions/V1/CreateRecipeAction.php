@@ -20,7 +20,7 @@ class CreateRecipeAction
         ]);
 
         $recipe->ingredients()->createMany(
-            array_map(fn($i) => [
+            array_map(fn ($i) => [
                 'name' => $i['name'],
                 'quantity' => $i['quantity'] ?? null,
                 'unit' => $i['unit'] ?? null,
@@ -28,8 +28,8 @@ class CreateRecipeAction
         );
 
         $recipe->steps()->createMany(
-            array_map(fn($s) => [
-                'step_no' => (int)$s['step_no'],
+            array_map(fn ($s) => [
+                'step_no' => (int) $s['step_no'],
                 'description' => $s['description'],
             ], $fields['steps'])
         );

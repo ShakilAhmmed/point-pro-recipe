@@ -22,7 +22,7 @@ class Recipe extends Model
         'cuisine_type',
         'image',
         'user_id',
-        'visibility'
+        'visibility',
     ];
 
     public function user(): BelongsTo
